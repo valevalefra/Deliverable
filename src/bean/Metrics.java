@@ -20,7 +20,7 @@ public class Metrics {
 		  }
 	  
 	  
-	private static final String cmd = "git -C ";
+	private static final String GIT = "git -C ";
 	static File path = new File("C:\\Users\\valen\\bookkeeper");
 	static List<Commit> list = new ArrayList<>();
 	static List<FileMetrics> listCgh = new ArrayList<>();
@@ -37,7 +37,7 @@ public class Metrics {
 		
 		
 		try {
-			 commit = Runtime.getRuntime().exec(cmd +path+" --no-pager log --pretty=format:\"%cs,%H\" --reverse" );
+			 commit = Runtime.getRuntime().exec(GIT +path+" --no-pager log --pretty=format:\"%cs,%H\" --reverse" );
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -75,7 +75,7 @@ public class Metrics {
 			String commitAfter=list.get(i+1).getId();
 		
 			try {
-				 diff = Runtime.getRuntime().exec(cmd +path+" --no-pager diff --numstat "+ commitBefore +" "+ commitAfter+ " *.java" );
+				 diff = Runtime.getRuntime().exec(GIT +path+" --no-pager diff --numstat "+ commitBefore +" "+ commitAfter+ " *.java" );
 			} catch (IOException e) {
 				
 				e.printStackTrace();
@@ -164,7 +164,7 @@ public static void calculateCghSetSize() throws IOException {
 			int count;
 			List<FileMetrics> listForCommit = new ArrayList<>();
 			try {
-				 diff = Runtime.getRuntime().exec(cmd +path+" --no-pager diff-tree --no-commit-id --name-only -r "+ list.get(i).getId()+" *.java" );
+				 diff = Runtime.getRuntime().exec(GIT +path+" --no-pager diff-tree --no-commit-id --name-only -r "+ list.get(i).getId()+" *.java" );
 			} catch (IOException e) {
 				
 				e.printStackTrace();
