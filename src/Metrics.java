@@ -14,6 +14,10 @@ import entity.FileMetrics;
 
 public class Metrics {
 	
+	  private Metrics() {
+		    throw new IllegalStateException("Utility class");
+		  }
+	
 	static File path = new File("C:\\Users\\valen\\bookkeeper");
 	static List<Commit> list = new ArrayList<Commit>();
 	//lista contenente nome file, versione,maxChange,avgChange,change
