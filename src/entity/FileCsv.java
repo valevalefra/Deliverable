@@ -12,7 +12,7 @@ public class FileCsv {
 	float churn;
 	int maxChurn;
 	float avgChurn;
-	int CghSetSize;
+	int cghSetSize;
 	float maxCghSetSize;
 	float avgCghSetSize;
 	
@@ -71,10 +71,10 @@ public class FileCsv {
 		this.avgChurn = avgChurn;
 	}
 	public int getCghSetSize() {
-		return CghSetSize;
+		return cghSetSize;
 	}
 	public void setCghSetSize(int cghSetSize) {
-		CghSetSize = cghSetSize;
+		this.cghSetSize = cghSetSize;
 	}
 	public float getMaxCghSetSize() {
 		return maxCghSetSize;

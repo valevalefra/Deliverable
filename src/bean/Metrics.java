@@ -3,44 +3,46 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.ParseException;
-
 import java.util.ArrayList;
-
 import java.util.List;
-
 import entity.Commit;
 import entity.FileCsv;
 import entity.FileMetrics;
 
+
+
 public class Metrics {
+	
+
 	
 	  private Metrics() {
 		    throw new IllegalStateException("Utility class");
 		  }
 	  
-	  
+	 
+	 
+	 
 	private static final String GIT = "git -C ";
-	static File path = new File("C:\\Users\\valen\\bookkeeper");
+	private static String filePath="C:\\Users\\valen\\bookkeeper";
+	static File path = new File(filePath);
 	static List<Commit> list = new ArrayList<>();
 	static List<FileMetrics> listCgh = new ArrayList<>();
 	static List<FileMetrics> listFile = new ArrayList<>();
+	static List<FileCsv> fileMetrics=new ArrayList<>();
 	
 	static int maxLoc=0;
 	
 	//restituisce la lista di tutti i commeit con associate le date
-	public static void takeCommitVersions() throws IOException, ParseException {
+	public static void takeCommitVersions() throws IOException  {
 		
 		
 		Process commit=null;
 		
 		
 		
-		try {
+		
 			 commit = Runtime.getRuntime().exec(GIT +path+" --no-pager log --pretty=format:\"%cs,%H\" --reverse" );
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
 		
         BufferedReader stdInput = new BufferedReader(new InputStreamReader(commit.getInputStream()));
         
@@ -63,28 +65,19 @@ public class Metrics {
 		calculate();
 	}
 	
-	public static void calculate() throws IOException {
+	public static void calculate() throws IOException  {
 		
-		Process diff=null;
-		int count;
+		
 		
 		for(int i=0;i<list.size()-1;i++) {
 			//controllo che gli elementi appartengono alla stessa versione
-			if(list.get(i).getVersion()==list.get(i+1).getVersion()) {
-			String commitBefore=list.get(i).getId();
-			String commitAfter=list.get(i+1).getId();
-		
-			try {
-				 diff = Runtime.getRuntime().exec(GIT +path+" --no-pager diff --numstat "+ commitBefore +" "+ commitAfter+ " *.java" );
-			} catch (IOException e) {
-				
-				e.printStackTrace();
-			}
-			
-	        BufferedReader stdInput = new BufferedReader(new InputStreamReader(diff.getInputStream()));
+			BufferedReader stdInput;
+			stdInput=checkVersion(i);
 	        
 			FileMetrics fileM= new FileMetrics();
 	        String s;
+	        
+
 			while ((s = stdInput.readLine()) != null ) {
 				boolean found=false;
 				String[] l=s.split("\t",3);
@@ -92,45 +85,14 @@ public class Metrics {
 					//se il file è già presente nella lista con la stessa aggiorno solo il numero di righe
 					if(listFile.get(j).getFileName().equals(l[2]) && listFile.get(j).getVersion()==list.get(i).getVersion()) {
 						found=true;
-						count=listFile.get(j).getCount()+1;
-						int newRowAdded=listFile.get(j).getRowAdded()+Integer.parseInt(l[0]);
-						int newRowDeleted=listFile.get(j).getRowDeleted()+Integer.parseInt(l[1]);
-						int churn=newRowAdded-newRowDeleted;
-						int maxLoc=max(listFile.get(j).getMaxLoc(),newRowAdded);
-						int maxChurn=max(listFile.get(j).getChurn(),churn);
-						float avgLoc=newRowAdded/count;
-						float avgChurn=churn/count;
-						listFile.get(j).setAvgChurn(avgChurn);
-						listFile.get(j).setCount(count);
-						listFile.get(j).setAvgLoc(avgLoc);
-						listFile.get(j).setMaxChurn(maxChurn);
-						listFile.get(j).setMaxLoc(maxLoc);
-						listFile.get(j).setChurn(churn);
-						listFile.get(j).setRowDeleted(newRowDeleted);
-						listFile.get(j).setRowAdded(newRowAdded);
+						updateFile(j,l);
 						break;
 					}
 				}
-				if(found==false) {
+				if(!found) {
 				//Significa che il file non è presente nella lista quindi lo aggiungo per la prima volta
-					 int churn=Integer.parseInt(l[0])-Integer.parseInt(l[1]);
-			         fileM.setRowAdded(Integer.parseInt(l[0]));
-			         fileM.setRowDeleted(Integer.parseInt(l[1]));
-			         count=1;
-			         int maxLoc=Integer.parseInt(l[0]);
-			         float avgLoc=Integer.parseInt(l[0]);
-			         int maxChurn=churn;
-			         float avgChurn=churn;
-			         fileM.setAvgLoc(avgLoc);
-			         fileM.setMaxLoc(maxLoc);
-			         fileM.setFileName(l[2]);
-			         fileM.setMaxChurn(maxChurn);
-			         fileM.setAvgChurn(avgChurn);
-			         fileM.setChurn(churn);
-			         fileM.setCount(count);
-			         fileM.setVersion(list.get(i).getVersion());
+					addFile(fileM,i,l);
 
-			         listFile.add(fileM);
 				}
 
 			}   //arrivata qui ho una lista di dati relativi a una revision 
@@ -140,8 +102,69 @@ public class Metrics {
 				
 	}
 				
-	}
 	
+	
+private static BufferedReader checkVersion(int i) throws IOException  {
+		
+	Process diff=null;
+	BufferedReader stdInput = null;
+	if(list.get(i).getVersion().equals(list.get(i+1).getVersion())) {
+		String commitBefore=list.get(i).getId();
+		String commitAfter=list.get(i+1).getId();
+	
+       diff = Runtime.getRuntime().exec(GIT +path+" --no-pager diff --numstat "+ commitBefore +" "+ commitAfter+ " *.java" );
+       stdInput = new BufferedReader(new InputStreamReader(diff.getInputStream()));
+       
+       }
+	
+	return stdInput;
+		
+	}
+
+private static void updateFile(int j, String[] l) {
+		
+	int count=listFile.get(j).getCount()+1;
+	int newRowAdded=listFile.get(j).getRowAdded()+Integer.parseInt(l[0]);
+	int newRowDeleted=listFile.get(j).getRowDeleted()+Integer.parseInt(l[1]);
+	int churn=newRowAdded-newRowDeleted;
+	int maxLoc=max(listFile.get(j).getMaxLoc(),newRowAdded);
+	int maxChurn=max(listFile.get(j).getChurn(),churn);
+	float avgLoc=(float)((double)newRowAdded/count);
+	float avgChurn=(float)(churn/(double)count);
+	listFile.get(j).setAvgChurn(avgChurn);
+	listFile.get(j).setCount(count);
+	listFile.get(j).setAvgLoc(avgLoc);
+	listFile.get(j).setMaxChurn(maxChurn);
+	listFile.get(j).setMaxLoc(maxLoc);
+	listFile.get(j).setChurn(churn);
+	listFile.get(j).setRowDeleted(newRowDeleted);
+	listFile.get(j).setRowAdded(newRowAdded);
+	}
+
+private static void addFile(FileMetrics fileM, int i, String[] l) {
+	 int churn=Integer.parseInt(l[0])-Integer.parseInt(l[1]);
+     fileM.setRowAdded(Integer.parseInt(l[0]));
+     fileM.setRowDeleted(Integer.parseInt(l[1]));
+     int count=1;
+     int maxLoc=Integer.parseInt(l[0]);
+     float avgLoc=Integer.parseInt(l[0]);
+     int maxChurn=churn;
+     float avgChurn=churn;
+     fileM.setAvgLoc(avgLoc);
+     fileM.setMaxLoc(maxLoc);
+     fileM.setFileName(l[2]);
+     fileM.setMaxChurn(maxChurn);
+     fileM.setAvgChurn(avgChurn);
+     fileM.setChurn(churn);
+     fileM.setCount(count);
+     fileM.setVersion(list.get(i).getVersion());
+     
+     
+
+     listFile.add(fileM);
+	
+	}
+
 private static int max(int max, int newValue) {
 		
         int maxValue=0;
@@ -163,12 +186,9 @@ public static void calculateCghSetSize() throws IOException {
 			float avgCSS;
 			int count;
 			List<FileMetrics> listForCommit = new ArrayList<>();
-			try {
+		
 				 diff = Runtime.getRuntime().exec(GIT +path+" --no-pager diff-tree --no-commit-id --name-only -r "+ list.get(i).getId()+" *.java" );
-			} catch (IOException e) {
-				
-				e.printStackTrace();
-			}
+
 			
 	        BufferedReader stdInput = new BufferedReader(new InputStreamReader(diff.getInputStream()));
 	       
@@ -181,7 +201,7 @@ public static void calculateCghSetSize() throws IOException {
 						int newCSS=listCgh.get(k).getChangeSS()+1;
 						maxCSS=newCSS;
 						count=listCgh.get(k).getCount()+1;
-						avgCSS=newCSS/count;
+						avgCSS=(float)((double)newCSS/count);
 						listCgh.get(k).setAvgChange(avgCSS);
 						listCgh.get(k).setMaxChange(maxCSS);
 	                    listCgh.get(k).setChangeSS(newCSS);
@@ -221,7 +241,7 @@ public static void calculateCghSetSize() throws IOException {
 	
 	public static List<FileCsv> unionList() {
 		
-		List<FileCsv> fileMetrics = new ArrayList<FileCsv>();
+		List<FileCsv> fileMetrics = new ArrayList<>();
 		
 		for(int i=0;i<listCgh.size();i++) {
 			for(int j=0;j<listFile.size();j++) {
@@ -257,13 +277,13 @@ public static void calculateCghSetSize() throws IOException {
 		return fileMetrics;
 	}
 
-	public static List<FileCsv> setMetrics(List<FileCsv> csvLines) throws IOException, ParseException {
+	public static List<FileCsv> setMetrics(List<FileCsv> csvLines) throws IOException   {
+		
 		
 		takeCommitVersions();
 		calculate();
 		calculateCghSetSize();
 		
-		List<FileCsv> fileMetrics=new ArrayList<FileCsv>();
 		
 		fileMetrics=unionList();
 		for(int i=0;i<csvLines.size();i++) {
@@ -295,15 +315,6 @@ public static void calculateCghSetSize() throws IOException {
 	}
 	
 	
-/*	public static int maxLoc(List<FileMetrics> listFile) {
-		
-		
-		for(int k=0;k<listFile.size();k++) {
-			if(listFile.get(k).getRowAdded()>maxLoc) {
-				maxLoc=listFile.get(k).getRowAdded();
-			}
-		}
-		return maxLoc;
-	}*/
+
 
 }
