@@ -1,11 +1,11 @@
 language: java
 jdk:
-- openjdk8
+   - openjdk8
 
 addons:
-sonarcloud:
-organization: valevalefra
-token: dddb67eb071fc5c0b4e2024bbe92fe23199c247a
+   sonarcloud:
+    organization: valevalefra
+    token: dddb67eb071fc5c0b4e2024bbe92fe23199c247a
 script:
-- ant build
-- sonar-scanner
+  - ant build
+  - sonar-scanner
