@@ -140,9 +140,6 @@ public class Metrics {
 				
 	}
 				
-			/*for(int k=0;k<listFile.size();k++) {
-			System.out.println(listFile.get(k).getNameFile());
-			System.out.println(listFile.get(k).getRowAdded());}*/
 	}
 	
 private static int max(int max, int newValue) {
@@ -165,7 +162,7 @@ public static void calculateCghSetSize() throws IOException {
 			int maxCSS;
 			float avgCSS;
 			int count;
-			List<FileMetrics> listForCommit = new ArrayList<FileMetrics>();
+			List<FileMetrics> listForCommit = new ArrayList<>();
 			try {
 				 diff = Runtime.getRuntime().exec(cmd +path+" --no-pager diff-tree --no-commit-id --name-only -r "+ list.get(i).getId()+" *.java" );
 			} catch (IOException e) {
@@ -192,7 +189,7 @@ public static void calculateCghSetSize() throws IOException {
 						break;
 					}
 				}
-				if(found==false) {
+				if(found) {
 					int newCSS=1;
 					count=1;
 					FileMetrics fm= new FileMetrics();
