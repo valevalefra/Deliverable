@@ -343,7 +343,7 @@ public class RetrieveTicketsID {
 		
 
             
-			//File path = new File("C:\\Users\\valen\\bookkeeper");
+			
 			
 			//Prendo la data del primo commit per ogni ticket
 			try {
@@ -467,13 +467,6 @@ public class RetrieveTicketsID {
 		}
 		//elimino file duplicati
 		filteredFiles=new ArrayList<String>(new LinkedHashSet<String>(rawFiles));
-		/*FileWriter fileWriter2= null;
-		fileWriter2 =new FileWriter("C:\\Users\\valen\\Desktop\\file3.csv");
-		for(int i=0;i<filteredFiles.size();i++) {
-			fileWriter2.append(filteredFiles.get(i));
-			fileWriter2.append("\n");*/
-		//}
-		//System.out.println(filteredFiles);
 		return;
 		
 	}
