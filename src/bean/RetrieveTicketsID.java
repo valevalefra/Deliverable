@@ -30,7 +30,12 @@ import entity.Versions;
 import org.json.JSONArray;
 
 public class RetrieveTicketsID {
-
+	
+	
+	
+	 private RetrieveTicketsID() {
+		    throw new IllegalStateException("Utility class");
+		  }
 	
 		static String filePath="C:\\Users\\valen\\Desktop\\file2.csv"; 
 		static File path = new File("C:\\Users\\valen\\bookkeeper");
