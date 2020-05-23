@@ -71,7 +71,7 @@
         </java>
     </target>
     <target name="Ticket">
-        <java classname="Ticket" failonerror="true" fork="yes">
+        <java classname="entity.Ticket" failonerror="true" fork="yes">
             <classpath refid="run.Ticket.classpath"/>
         </java>
     </target>
