@@ -4,7 +4,7 @@ jdk:
 
 addons:
 sonarcloud:
-organization: Valevalefra
+organization: valevalefra
 token: dddb67eb071fc5c0b4e2024bbe92fe23199c247a
 script:
 - ant build
