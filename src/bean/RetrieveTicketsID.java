@@ -40,11 +40,9 @@ public class RetrieveTicketsID {
 		static String filePath="C:\\Users\\valen\\Desktop\\file2.csv"; 
 		static File path = new File("C:\\Users\\valen\\bookkeeper");
 		static FileWriter fileWriter= null;
-		static List<String> filteredFiles=new ArrayList<String>();
-		
-		//static FileCsv fileCsv=new FileCsv();
-		static List<FileCsv> csvLines = new ArrayList<FileCsv>();
-		static List<FileCsv> csvFinal = new ArrayList<FileCsv>();
+		static List<String> filteredFiles=new ArrayList<>();
+		static List<FileCsv> csvLines = new ArrayList<>();
+		static List<FileCsv> csvFinal = new ArrayList<>();
 		
 
    private static String readAll(Reader rd) throws IOException {

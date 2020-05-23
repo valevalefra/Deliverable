@@ -23,11 +23,6 @@ public class Metrics {
 	private static final String cmd = "git -C ";
 	static File path = new File("C:\\Users\\valen\\bookkeeper");
 	static List<Commit> list = new ArrayList<>();
-    //TOLTO PER SONAR
-	//static List<Commit> list = new ArrayList<Commit>();
-	//lista contenente nome file, versione,maxChange,avgChange,change
-	//static List<FileMetrics> listCgh = new ArrayList<FileMetrics>();
-	//static List<FileMetrics> listFile = new ArrayList<FileMetrics>();
 	static List<FileMetrics> listCgh = new ArrayList<>();
 	static List<FileMetrics> listFile = new ArrayList<>();
 	
