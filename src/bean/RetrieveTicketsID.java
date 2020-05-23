@@ -265,7 +265,7 @@ public class RetrieveTicketsID {
        try {
 		csvFinal=Metrics.setMetrics(csvLines);
 	} catch (IOException | ParseException e) {
-		// TODO Auto-generated catch block
+		
 		e.printStackTrace();
 	}
        writeCsv(csvFinal);
@@ -346,7 +346,7 @@ public class RetrieveTicketsID {
 			try {
 				logGit = Runtime.getRuntime().exec("git -C "+path +" log -1 --pretty=format:\"%cs\" --grep=" + key );
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+			
 				e.printStackTrace();
 			}
 	        BufferedReader stdInput = new BufferedReader(new InputStreamReader(logGit.getInputStream()));
@@ -392,7 +392,7 @@ public class RetrieveTicketsID {
 	            y = dateFormat.parse(s);
 
 	        } catch (ParseException e) {
-	            // TODO Auto-generated catch block
+	            
 	            e.printStackTrace();
 	        }
 
@@ -759,7 +759,7 @@ public class RetrieveTicketsID {
 			fileWriter.append("\n");
 			System.out.println("fatto");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}finally {
 			try {
