@@ -225,49 +225,7 @@ public static void calculateCghSetSize() throws IOException {
 	
 	
 
-/*	private static int maxCgh(List<FileMetrics> listCgh2) {
-	
-	return 0;
-}
 
-	private static int avgChurn(List<FileMetrics> listFile) {
-		int numC=0;
-		int tot=listFile.size();
-		int avg=0;
-		
-		for(int k=0;k<listFile.size();k++) {
-			numC=numC+listFile.get(k).getChurn();
-		}
-		
-		avg=numC/tot;
-		return avg;
-	}
-
-	private static int maxChurn(List<FileMetrics> listFile) {
-		
-		int maxChurn=0;
-		for(int k=0;k<listFile.size();k++) {
-			if(listFile.get(k).getChurn()>maxChurn) {
-				maxChurn=listFile.get(k).getChurn();
-			}
-		}
-		return maxChurn;
-	
-	}
-
-	private static int avgLoc(List<FileMetrics> listFile) {
-		
-		int numL=0;
-		int tot=listFile.size();
-		int avg=0;
-		
-		for(int k=0;k<listFile.size();k++) {
-			numL=numL+listFile.get(k).getRowAdded();
-		}
-		
-		avg=numL/tot;
-		return avg;
-	}*/
 	
 	public static List<FileCsv> unionList() {
 		
